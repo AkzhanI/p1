@@ -1,6 +1,7 @@
 from datetime import datetime
 import json
 import os
+import tkinter as tk
 
 def load_categories():
     if os.path.exists("categories.json"):
@@ -32,7 +33,7 @@ def add_xp(category, xp):
     history.append(entry)
     save_history(history)
 
-def colculate_stats():
+def calculate_stats():
     history = load_history()
     total_xp = 0
     categories_xp = {}
@@ -44,4 +45,18 @@ def colculate_stats():
                 categories_xp[item["category"]] = item["xp"]
     level = total_xp // 100
     return total_xp, level, categories_xp
-print(colculate_stats())
+
+root = tk.Tk()
+root.title("Skill Tracker")
+root.geometry("400x500")
+total_xp, level, categoties_xp = calculate_stats()
+tk.Label(root, text=f"level: {level}").pack()
+tk.Label(root, text=f"XP: {total_xp}").pack()
+for cat, xp in categoties_xp.items():
+    tk.Label(root, text=f"{cat}: {xp} XP").pack()
+categories = load_categories()
+for cat, rules in categories.items():
+    tk.Label(root, text=cat).pack()
+    for xp_amount, rule in rules.items():
+        tk.Button(root, text=f"{rule} +{xp_amount}", command=lambda c=cat, x=xp_amount: add_xp(c, int(x))).pack()
+root.mainloop()
