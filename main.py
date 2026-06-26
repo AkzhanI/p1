@@ -46,17 +46,22 @@ def calculate_stats():
     level = total_xp // 100
     return total_xp, level, categories_xp
 
+def  refresh():
+    for widjet in root.winfo_children():
+        widjet.destroy()
+    total_xp, level, categoties_xp = calculate_stats()
+    tk.Label(root, text=f"level: {level}").pack()
+    tk.Label(root, text=f"XP: {total_xp}").pack()
+    for cat, xp in categoties_xp.items():
+        tk.Label(root, text=f"{cat}: {xp} XP").pack()
+    categories = load_categories()
+    for cat, rules in categories.items():
+        tk.Label(root, text=cat).pack()
+        for xp_amount, rule in rules.items():
+            tk.Button(root, text=f"{rule} +{xp_amount}", command=lambda c=cat, x=xp_amount: [add_xp(c, int(x)), refresh()]).pack()
+
 root = tk.Tk()
 root.title("Skill Tracker")
 root.geometry("400x500")
-total_xp, level, categoties_xp = calculate_stats()
-tk.Label(root, text=f"level: {level}").pack()
-tk.Label(root, text=f"XP: {total_xp}").pack()
-for cat, xp in categoties_xp.items():
-    tk.Label(root, text=f"{cat}: {xp} XP").pack()
-categories = load_categories()
-for cat, rules in categories.items():
-    tk.Label(root, text=cat).pack()
-    for xp_amount, rule in rules.items():
-        tk.Button(root, text=f"{rule} +{xp_amount}", command=lambda c=cat, x=xp_amount: add_xp(c, int(x))).pack()
+refresh()
 root.mainloop()
