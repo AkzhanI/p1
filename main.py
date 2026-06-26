@@ -3,6 +3,10 @@ import json
 import os
 import tkinter as tk
 
+BG = "#1e1e2e"
+FG = "white"
+ACCENT = "#7c3aed"
+
 def load_categories():
     if os.path.exists("categories.json"):
         with open("categories.json") as f:
@@ -50,18 +54,19 @@ def  refresh():
     for widjet in root.winfo_children():
         widjet.destroy()
     total_xp, level, categoties_xp = calculate_stats()
-    tk.Label(root, text=f"level: {level}").pack()
-    tk.Label(root, text=f"XP: {total_xp}").pack()
+    tk.Label(root, text=f"level: {level}", bg=BG, fg=FG, font=("Courier", 12), pady=4).pack()
+    tk.Label(root, text=f"XP: {total_xp}", bg=BG, fg=FG, font=("Courier", 12), pady=4).pack()
     for cat, xp in categoties_xp.items():
-        tk.Label(root, text=f"{cat}: {xp} XP").pack()
+        tk.Label(root, text=f"{cat}: {xp} XP", bg=BG, fg=FG, font=("Courier", 11), pady=6, padx=10).pack()
     categories = load_categories()
     for cat, rules in categories.items():
-        tk.Label(root, text=cat).pack()
+        tk.Label(root, text=cat, bg=BG, fg=FG, font=("Courier", 11), pady=6, padx=10).pack()
         for xp_amount, rule in rules.items():
-            tk.Button(root, text=f"{rule} +{xp_amount}", command=lambda c=cat, x=xp_amount: [add_xp(c, int(x)), refresh()]).pack()
+            tk.Button(root, text=f"{rule} +{xp_amount}", bg=ACCENT, fg=FG, font=("Courier", 11), pady=6, padx=10, width=20, command=lambda c=cat, x=xp_amount: [add_xp(c, int(x)), refresh()]).pack()
 
 root = tk.Tk()
 root.title("Skill Tracker")
 root.geometry("400x500")
+root.configure(bg="#1e1e2e")
 refresh()
 root.mainloop()
