@@ -50,9 +50,51 @@ def calculate_stats():
     level = total_xp // 100
     return total_xp, level, categories_xp
 
+def open_add_category():
+    window = tk.Toplevel(root)
+    window.title("new category")
+    window.configure(bg=BG)
+    window.geometry("300x400")
+    tk.Label(window, text="category name", bg=BG, fg=FG, font=("Courier", 11)).pack(pady=5)
+    name_entry = tk.Entry(window, font=("Courier", 11))
+    name_entry.pack(pady=5)
+
+    tk.Label(window, text="rules +2", bg=BG, fg=FG, font=("Courier", 11)).pack(pady=5)
+    entry_plus2 = tk.Entry(window, font=("Cpurier", 11))
+    entry_plus2.pack(pady=5)
+
+    tk.Label(window, text="rules +5", bg=BG, fg=FG, font=("Courier", 11)).pack(pady=5)
+    entry_plus5 = tk.Entry(window, font=("Cpurier", 11))
+    entry_plus5.pack(pady=5)  
+
+    tk.Label(window, text="rules +7", bg=BG, fg=FG, font=("Courier", 11)).pack(pady=5)
+    entry_plus7 = tk.Entry(window, font=("Cpurier", 11))
+    entry_plus7.pack(pady=5)  
+
+    tk.Label(window, text="rules +10", bg=BG, fg=FG, font=("Courier", 11)).pack(pady=5)
+    entry_plus10 = tk.Entry(window, font=("Cpurier", 11))
+    entry_plus10.pack(pady=5)
+
+    def save_category():
+        name = name_entry.get()
+        rules = {
+            "2": entry_plus2.get(),
+            "5": entry_plus5.get(),
+            "7": entry_plus7.get(),
+            "10": entry_plus10.get()
+        }
+        categories = load_categories()
+        categories[name] = rules
+        save_categories(categories)
+        window.destroy()
+        refresh()
+
+    tk.Button(window, text="save", bg=ACCENT, fg=FG, font=("Courier", 11), width=20, command=lambda: save_category()).pack(pady=10
+    
+                                                                                                                                                                                                                                                  )
 def  refresh():
-    for widjet in root.winfo_children():
-        widjet.destroy()
+    for widget in root.winfo_children():
+        widget.destroy()
     total_xp, level, categoties_xp = calculate_stats()
     tk.Label(root, text=f"level: {level}", bg=BG, fg=FG, font=("Courier", 12), pady=4).pack()
     tk.Label(root, text=f"XP: {total_xp}", bg=BG, fg=FG, font=("Courier", 12), pady=4).pack()
@@ -62,7 +104,9 @@ def  refresh():
     for cat, rules in categories.items():
         tk.Label(root, text=cat, bg=BG, fg=FG, font=("Courier", 11), pady=6, padx=10).pack()
         for xp_amount, rule in rules.items():
-            tk.Button(root, text=f"{rule} +{xp_amount}", bg=ACCENT, fg=FG, font=("Courier", 11), pady=6, padx=10, width=20, command=lambda c=cat, x=xp_amount: [add_xp(c, int(x)), refresh()]).pack()
+            tk.Button(root, text=f"{rule} +{xp_amount}", bg=ACCENT, fg=FG, font=("Courier", 11), pady=6, padx=10, width=20,  command=lambda c=cat, x=xp_amount: [add_xp(c, int(x)), refresh()]).pack()
+    tk.Button(root, text="+ add category", bg=ACCENT, fg=FG, font=("Courier, 11"), width=20, command=open_add_category).pack(pady=10)
+
 
 root = tk.Tk()
 root.title("Skill Tracker")
