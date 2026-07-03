@@ -77,6 +77,8 @@ def open_add_category():
 
     def save_category():
         name = name_entry.get()
+        if name.strip() == "":
+            return
         rules = {
             "2": entry_plus2.get(),
             "5": entry_plus5.get(),
@@ -91,7 +93,13 @@ def open_add_category():
 
     tk.Button(window, text="save", bg=ACCENT, fg=FG, font=("Courier", 11), width=20, command=lambda: save_category()).pack(pady=10
     
+        
                                                                                                                                                                                                                                                   )
+def delete_category(name):
+        categories = load_categories()
+        del categories[name]
+        save_categories(categories)
+        
 def  refresh():
     for widget in root.winfo_children():
         widget.destroy()
@@ -103,9 +111,11 @@ def  refresh():
     categories = load_categories()
     for cat, rules in categories.items():
         tk.Label(root, text=cat, bg=BG, fg=FG, font=("Courier", 11), pady=6, padx=10).pack()
+        tk.Button(root, text="Delete", bg=ACCENT, fg=FG, font=("Courier", 11), command=lambda c=cat: [delete_category(c), refresh()]).pack(pady=10, padx=10)
         for xp_amount, rule in rules.items():
             tk.Button(root, text=f"{rule} +{xp_amount}", bg=ACCENT, fg=FG, font=("Courier", 11), pady=6, padx=10, width=20,  command=lambda c=cat, x=xp_amount: [add_xp(c, int(x)), refresh()]).pack()
-    tk.Button(root, text="+ add category", bg=ACCENT, fg=FG, font=("Courier, 11"), width=20, command=open_add_category).pack(pady=10)
+    tk.Button(root, text="+ add category", bg=ACCENT, fg=FG, font=("Courier", 11), width=20, command=open_add_category).pack(pady=10)
+    
 
 
 root = tk.Tk()
