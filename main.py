@@ -60,19 +60,19 @@ def open_add_category():
     name_entry.pack(pady=5)
 
     tk.Label(window, text="rules +2", bg=BG, fg=FG, font=("Courier", 11)).pack(pady=5)
-    entry_plus2 = tk.Entry(window, font=("Cpurier", 11))
+    entry_plus2 = tk.Entry(window, font=("Courier", 11))
     entry_plus2.pack(pady=5)
 
     tk.Label(window, text="rules +5", bg=BG, fg=FG, font=("Courier", 11)).pack(pady=5)
-    entry_plus5 = tk.Entry(window, font=("Cpurier", 11))
+    entry_plus5 = tk.Entry(window, font=("Courier", 11))
     entry_plus5.pack(pady=5)  
 
     tk.Label(window, text="rules +7", bg=BG, fg=FG, font=("Courier", 11)).pack(pady=5)
-    entry_plus7 = tk.Entry(window, font=("Cpurier", 11))
+    entry_plus7 = tk.Entry(window, font=("Courier", 11))
     entry_plus7.pack(pady=5)  
 
     tk.Label(window, text="rules +10", bg=BG, fg=FG, font=("Courier", 11)).pack(pady=5)
-    entry_plus10 = tk.Entry(window, font=("Cpurier", 11))
+    entry_plus10 = tk.Entry(window, font=("Courier", 11))
     entry_plus10.pack(pady=5)
 
     def save_category():
