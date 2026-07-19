@@ -95,10 +95,10 @@ def open_add_category():
 def  refresh():
     for widget in root.winfo_children():
         widget.destroy()
-    total_xp, level, categoties_xp = calculate_stats()
+    total_xp, level, categories_xp = calculate_stats()
     tk.Label(root, text=f"level: {level}", bg=BG, fg=FG, font=("Courier", 12), pady=4).pack()
     tk.Label(root, text=f"XP: {total_xp}", bg=BG, fg=FG, font=("Courier", 12), pady=4).pack()
-    for cat, xp in categoties_xp.items():
+    for cat, xp in categories_xp.items():
         tk.Label(root, text=f"{cat}: {xp} XP", bg=BG, fg=FG, font=("Courier", 11), pady=6, padx=10).pack()
     categories = load_categories()
     for cat, rules in categories.items():
