@@ -111,9 +111,9 @@ def  refresh():
     categories = load_categories()
     for cat, rules in categories.items():
         tk.Label(scrollable_frame, text=cat, bg=BG, fg=FG, font=("Courier", 11), pady=6, padx=10).pack()
-        tk.Button(scrollable_frame, text="Delete", bg=ACCENT, fg=FG, font=("Courier", 11), command=lambda c=cat: [delete_category(c), refresh()]).pack(pady=10, padx=10)
+        tk.Button(scrollable_frame, text="Delete", bg=ACCENT, fg=FG, font=("Courier", 11), width=20, command=lambda c=cat: [delete_category(c), refresh()]).pack(pady=10, padx=10)
         for xp_amount, rule in rules.items():
-            tk.Button(scrollable_frame, text=f"{rule} +{xp_amount}", bg=ACCENT, fg=FG, font=("Courier", 11), pady=6, padx=10, width=20,  command=lambda c=cat, x=xp_amount: [add_xp(c, int(x)), refresh()]).pack()
+            tk.Button(scrollable_frame, text=f"{rule} +{xp_amount}", bg=ACCENT, fg=FG, font=("Courier", 11), width=20, pady=6, padx=10,  command=lambda c=cat, x=xp_amount: [add_xp(c, int(x)), refresh()]).pack()
     tk.Button(scrollable_frame, text="+ add category", bg=ACCENT, fg=FG, font=("Courier", 11), width=20, command=open_add_category).pack(pady=10)
     
 
@@ -127,12 +127,12 @@ scrollbar = tk.Scrollbar(root, orient="vertical", command=canvas.yview)
 scrollable_frame = tk.Frame(canvas, bg=BG)
 scrollable_frame.bind(
     "<Configure>",
-    lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+    lambda e: canvas.configure(scrollregion=(0, 0, 0, scrollable_frame.winfo_reqheight()))
 )
 frame_window = canvas.create_window((0, 0), window=scrollable_frame, anchor="n")
 def center_frame(event):
     canvas.coords(frame_window, event.width // 2, 0)
-canvas.bind("Configure", center_frame)
+canvas.bind("<Configure>", center_frame)
 canvas.configure(yscrollcommand=scrollbar.set)
 canvas.pack(side="left", fill="both", expand=True)
 scrollbar.pack(side="right", fill="y")
