@@ -55,7 +55,8 @@ def show_stats():
 while True:
     print("\n1. Show statistics")
     print("2. add XP")
-    print("3. Exit")
+    print("3. add category")
+    print("4. Exit")
     choice = input("Select an option: ")
 
     if choice == "1":
@@ -71,8 +72,6 @@ while True:
             add_xp(cat, xp)
             print("Added!")
     elif choice == "3":
-        break
-    elif choice == "4":
         name = input("Category name: ")
         rule2 = input("Rule for +2 XP: ")
         rule5 = input("Rule for +5 XP: ")
@@ -87,5 +86,8 @@ while True:
         }
         save_categories(categories)
         print("Category added!")
+    elif choice == "4":
+        break
+        
     else:
         print("not yet implemented")
