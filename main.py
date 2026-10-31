@@ -5,7 +5,7 @@ import tkinter as tk
 
 BG = "#1e1e2e"
 FG = "white"
-ACCENT = "#7c3aed"
+ACCENT = "#380b86"
 
 def load_categories():
     if os.path.exists("categories.json"):
@@ -94,7 +94,7 @@ def open_add_category():
     tk.Button(window, text="save", bg=ACCENT, fg=FG, font=("Courier", 11), width=20, command=lambda: save_category()).pack(pady=10
     
         
-                                                                                                                                                                                                                                                  )
+    )
 def delete_category(name):
         categories = load_categories()
         del categories[name]
