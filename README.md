@@ -1,4 +1,5 @@
 # Skill Tracker
+[![Lint](https://github.com/AkzhanI/p1/actions/workflows/lint.yml/badge.svg)](https://github.com/AkzhanI/p1/actions/workflows/lint.yml)
 
 A tool for tracking skills and learning progress through a gamified XP system. Available in two versions: a desktop app (Tkinter) and a CLI version (Docker-ready).
 
