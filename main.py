@@ -1,7 +1,7 @@
-from datetime import datetime
 import json
 import os
 import tkinter as tk
+from datetime import datetime
 
 BG = "#1e1e2e"
 FG = "white"
