@@ -1,4 +1,11 @@
-from logic import load_categories, save_categories, add_xp, calculate_stats, delete_category
+from logic import (
+    add_xp,
+    calculate_stats,
+    delete_category,
+    load_categories,
+    save_categories,
+)
+
 
 def show_stats():
     total_xp, level, categories_xp = calculate_stats()
@@ -49,7 +56,7 @@ while True:
             print("Categories:", list(categories.keys()))
             name = input("enter the category name to delete: ")
             if name in categories:
-                delete_category
+                delete_category(name)
                 print("Deleted!")
             else:
                 print("no such category")

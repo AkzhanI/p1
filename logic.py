@@ -3,7 +3,6 @@ import os
 from datetime import datetime
 
 
-
 def load_categories():
     if os.path.exists("categories.json"):
         with open("categories.json") as f:

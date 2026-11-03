@@ -1,6 +1,12 @@
-from logic import load_categories, save_categories,add_xp, calculate_stats, delete_category
 import tkinter as tk
 
+from logic import (
+    add_xp,
+    calculate_stats,
+    delete_category,
+    load_categories,
+    save_categories,
+)
 
 BG = "#1e1e2e"
 FG = "white"
