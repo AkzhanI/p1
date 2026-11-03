@@ -1,54 +1,12 @@
-import json
-import os
+from logic import load_categories, save_categories,add_xp, calculate_stats, delete_category
 import tkinter as tk
-from datetime import datetime
+
 
 BG = "#1e1e2e"
 FG = "white"
 ACCENT = "#380b86"
 
-def load_categories():
-    if os.path.exists("categories.json"):
-        with open("categories.json") as f:
-            return json.load(f)
-    else:
-        return {}
-def save_categories(data):
-    with open("categories.json", "w") as f:
-        json.dump(data, f)
 
-def load_history():
-    if os.path.exists("history.json"):
-        with open("history.json") as f:
-            return json.load(f)
-    else:
-        return []
-def save_history(data):
-    with open("history.json", "w") as f:
-        json.dump(data, f)
-
-def add_xp(category, xp):
-    history = load_history()
-    entry = {
-        "timestamp": datetime.now().isoformat(), 
-        "category": category, 
-        "xp": xp
-    }
-    history.append(entry)
-    save_history(history)
-
-def calculate_stats():
-    history = load_history()
-    total_xp = 0
-    categories_xp = {}
-    for item in history:
-        total_xp += item["xp"]
-        if item["category"] in categories_xp:
-            categories_xp[item["category"]] += item["xp"] 
-        else:
-                categories_xp[item["category"]] = item["xp"]
-    level = total_xp // 100
-    return total_xp, level, categories_xp
 
 def open_add_category():
     window = tk.Toplevel(root)
@@ -92,13 +50,8 @@ def open_add_category():
         refresh()
 
     tk.Button(window, text="save", bg=ACCENT, fg=FG, font=("Courier", 11), width=20, command=lambda: save_category()).pack(pady=10
-    
-        
     )
-def delete_category(name):
-        categories = load_categories()
-        del categories[name]
-        save_categories(categories)
+
         
 def  refresh():
     for widget in scrollable_frame.winfo_children():
