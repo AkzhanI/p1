@@ -3,3 +3,4 @@ history.json
 testenv/
 __pycache__/
 .ruff_cache
+tracker.db

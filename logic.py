@@ -1,6 +1,11 @@
 import json
 import os
+import sqlite3
 from datetime import datetime
+
+conn = sqlite3.connect("tracker.db")
+conn.execute("CREATE TABLE IF NOT EXISTS history (timestamp TEXT, category TEXT, xp INTEGER)")
+conn.commit()
 
 
 def load_categories():
@@ -24,25 +29,18 @@ def save_history(data):
         json.dump(data, f)
 
 def add_xp(category, xp):
-    history = load_history()
-    entry = {
-        "timestamp": datetime.now().isoformat(), 
-        "category": category, 
-        "xp": xp
-    }
-    history.append(entry)
-    save_history(history)
+   conn.execute(
+       "INSERT INTO history (timestamp, category, xp) VALUES (?, ?, ?)",
+       (datetime.now().isoformat(), category, xp)
+   )
+   conn.commit()
 
 def calculate_stats():
-    history = load_history()
-    total_xp = 0
+    rows = conn.execute("SELECT category, SUM(xp) FROM history GROUP BY category").fetchall()
     categories_xp = {}
-    for item in history:
-        total_xp += item["xp"]
-        if item["category"] in categories_xp:
-            categories_xp[item["category"]] += item["xp"] 
-        else:
-                categories_xp[item["category"]] = item["xp"]
+    for category, xp in rows:
+        categories_xp[category] = xp
+    total_xp = sum(categories_xp.values()) 
     level = total_xp // 100
     return total_xp, level, categories_xp
 
