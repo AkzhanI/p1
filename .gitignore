@@ -1,5 +1,3 @@
-categories.json
-history.json
 testenv/
 __pycache__/
 .ruff_cache
