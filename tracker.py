@@ -3,7 +3,7 @@ from logic import (
     calculate_stats,
     delete_category,
     load_categories,
-    save_categories,
+    add_category,
 )
 
 
@@ -39,14 +39,8 @@ while True:
         rule5 = input("Rule for +5 XP: ")
         rule7 = input("Rule for +7 XP: ")
         rule10 = input("Rule for +10 XP: ")
-        categories = load_categories()
-        categories[name] = {
-            "2": rule2,
-            "5": rule5,
-            "7": rule7,
-            "10": rule10
-        }
-        save_categories(categories)
+        rules = {"2": rule2,  "5": rule5, "7": rule7, "10": rule10}
+        add_category(name, rules)
         print("Category added!")
     elif choice == "4":
         categories = load_categories()

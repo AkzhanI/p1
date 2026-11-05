@@ -5,7 +5,7 @@ from logic import (
     calculate_stats,
     delete_category,
     load_categories,
-    save_categories,
+    add_category,
 )
 
 BG = "#1e1e2e"
@@ -49,9 +49,7 @@ def open_add_category():
             "7": entry_plus7.get(),
             "10": entry_plus10.get()
         }
-        categories = load_categories()
-        categories[name] = rules
-        save_categories(categories)
+        add_category(name, rules)
         window.destroy()
         refresh()
 
