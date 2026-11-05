@@ -1,11 +1,11 @@
 import tkinter as tk
 
 from logic import (
+    add_category,
     add_xp,
     calculate_stats,
     delete_category,
     load_categories,
-    add_category,
 )
 
 BG = "#1e1e2e"
