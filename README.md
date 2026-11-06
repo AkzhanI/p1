@@ -32,9 +32,10 @@ SELECT category, SUM(xp) FROM history GROUP BY category;
 If I delete a category, its rules are gone, but its XP stays in history. So I don't lose XP by accident.
 
 ## Run
-
+``` bash
 python3 tracker.py
 python3 main.py
+```
 Only Python 3 is needed, sqlite3 is built in. The GUI needs a screen, so run it on the host machine, not in the dev container. The CLI works anywhere.
 
 There is a dev container config for VS Code: open the folder and choose "Reopen in Container".
