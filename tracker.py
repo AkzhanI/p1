@@ -40,8 +40,10 @@ while True:
         rule7 = input("Rule for +7 XP: ")
         rule10 = input("Rule for +10 XP: ")
         rules = {"2": rule2,  "5": rule5, "7": rule7, "10": rule10}
-        add_category(name, rules)
-        print("Category added!")
+        if add_category(name, rules):
+            print("Category added!")
+        else:
+            print("Category already exists")
     elif choice == "4":
         categories = load_categories()
         if not categories:

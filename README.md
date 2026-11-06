@@ -45,5 +45,5 @@ Ruff checks the code on every push (GitHub Actions).
 
 - [x] history: JSON -> SQLite
 - [x] categories and rules: JSON -> SQLite
-- [ ] show "category already exists" message in CLI and GUI
+- [x] show "category already exists" message in CLI and GUI
 - [ ] web version on FastAPI (one connection per request, because a SQLite connection can't be shared between threads)

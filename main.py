@@ -18,7 +18,7 @@ def open_add_category():
     window = tk.Toplevel(root)
     window.title("new category")
     window.configure(bg=BG)
-    window.geometry("300x400")
+    window.geometry("300x470")
     tk.Label(window, text="category name", bg=BG, fg=FG, font=("Courier", 11)).pack(pady=5)
     name_entry = tk.Entry(window, font=("Courier", 11))
     name_entry.pack(pady=5)
@@ -38,8 +38,11 @@ def open_add_category():
     tk.Label(window, text="rules +10", bg=BG, fg=FG, font=("Courier", 11)).pack(pady=5)
     entry_plus10 = tk.Entry(window, font=("Courier", 11))
     entry_plus10.pack(pady=5)
+    error_label = tk.Label(window, text="", bg=BG, fg="red", font=("Courier", 11))
+    error_label.pack()
 
     def save_category():
+        error_label.config(text="")
         name = name_entry.get()
         if name.strip() == "":
             return
@@ -49,9 +52,11 @@ def open_add_category():
             "7": entry_plus7.get(),
             "10": entry_plus10.get()
         }
-        add_category(name, rules)
-        window.destroy()
-        refresh()
+        if add_category(name, rules):
+            window.destroy()
+            refresh()
+        else:
+            error_label.config(text="category already exists")
 
     tk.Button(window, text="save", bg=ACCENT, fg=FG, font=("Courier", 11), width=20, command=lambda: save_category()).pack(pady=10
     )
