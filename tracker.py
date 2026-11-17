@@ -3,16 +3,21 @@ from logic import (
     add_xp,
     calculate_stats,
     delete_category,
+    get_conn,
     load_categories,
 )
 
+conn = get_conn()
+
 
 def show_stats():
-    total_xp, level, categories_xp = calculate_stats()
+    total_xp, level, categories_xp = calculate_stats(conn)
     print(f"Level: {level}")
     print(f"XP: {total_xp}")
     for cat, xp in categories_xp.items():
         print(f"  {cat}: {xp} XP")
+
+
 while True:
     print("\n1. Show statistics")
     print("2. add XP")
@@ -24,40 +29,47 @@ while True:
     if choice == "1":
         show_stats()
     elif choice == "2":
-        categories = load_categories()
+        categories = load_categories(conn)
         if not categories:
             print("no category")
         else:
             print("Categories:", list(categories.keys()))
             cat = input("enter the category name: ")
-            xp = int(input("Enter XP amount: "))
-            add_xp(cat, xp)
-            print("Added!")
+            try:
+                xp = int(input("Enter XP amount: "))
+                add_xp(conn, cat, xp)
+                print("Added!")
+            except ValueError as e:
+                print("Error:", e)
+            except LookupError as e:
+                print("Error:", e)
     elif choice == "3":
         name = input("Category name: ")
         rule2 = input("Rule for +2 XP: ")
         rule5 = input("Rule for +5 XP: ")
         rule7 = input("Rule for +7 XP: ")
         rule10 = input("Rule for +10 XP: ")
-        rules = {"2": rule2,  "5": rule5, "7": rule7, "10": rule10}
-        if add_category(name, rules):
+        rules = {"2": rule2, "5": rule5, "7": rule7, "10": rule10}
+        if add_category(conn, name, rules):
             print("Category added!")
         else:
             print("Category already exists")
     elif choice == "4":
-        categories = load_categories()
+        categories = load_categories(conn)
         if not categories:
             print("no category")
         else:
             print("Categories:", list(categories.keys()))
             name = input("enter the category name to delete: ")
             if name in categories:
-                delete_category(name)
+                delete_category(conn, name)
                 print("Deleted!")
             else:
                 print("no such category")
     elif choice == "5":
         break
-        
+
     else:
         print("not yet implemented")
+
+conn.close()
