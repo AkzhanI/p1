@@ -1,7 +1,6 @@
+import os
 import sqlite3
 from datetime import datetime
-import os
-
 
 DB_PATH = os.environ.get("DB_PATH", "tracker.db")
 
