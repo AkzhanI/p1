@@ -69,4 +69,5 @@ def get_stats(conn=Depends(get_db)):
     }
 
 from fastapi.staticfiles import StaticFiles
+
 app.mount("/", StaticFiles(directory="static", html=True), name="static")
