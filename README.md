@@ -83,3 +83,9 @@ Ruff checks the code on every push (GitHub Actions).
 - [x] Dockerfile for the API
 - [ ] build the Docker image in GitHub Actions
 - [ ] simple web page that talks to the API
+
+
+## Authorship
+
+The backend (logic layer, FastAPI, SQLite, CLI, GUI) was written by me.
+The web interface (static/index.html) was generated with Claude (Anthropic) based on my API and on design mockups from Gemini and ChatGPT.
