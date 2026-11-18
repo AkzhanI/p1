@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XP Tracker</title>
+<style>
+  :root {
+    --bg: #0f1424;
+    --card: #151c32;
+    --card-2: #1b2440;
+    --border: #25304f;
+    --text: #dfe4f1;
+    --muted: #8d97b5;
+    --accent: #8b7cf6;
+    --danger: #f08a8a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.4;
+  }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 20px 16px 56px; }
+
+  /* Шапка: уровень и прогресс */
+  .hero {
+    display: flex; align-items: center; gap: 20px;
+    background: linear-gradient(135deg, #171f3a, #131a30);
+    border: 1px solid var(--border);
+    border-radius: 20px; padding: 20px;
+  }
+  .level-badge {
+    width: 96px; height: 96px; flex: none;
+    border-radius: 22px; border: 2px solid var(--accent);
+    background: var(--bg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .lvl-label { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .lvl-num { font-size: 36px; font-weight: 700; line-height: 1.1; }
+  .hero-info { flex: 1; min-width: 0; }
+  .hero-row {
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px;
+    font-size: 14px; color: var(--muted); margin-bottom: 10px;
+  }
+  #total { color: var(--text); font-weight: 600; }
+  .bar { height: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 99px; overflow: hidden; }
+  .bar-fill {
+    height: 100%; width: 0; border-radius: 99px;
+    background: linear-gradient(90deg, #7c6cf0, #8b7cf6, #6f86f0);
+    transition: width .5s ease;
+  }
+
+  /* Заголовок секции */
+  .section { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 28px 0 14px; }
+  h2 { font-size: 18px; margin: 0; }
+  .btn-primary {
+    background: var(--accent); color: #10142a; border: 0; border-radius: 12px;
+    padding: 10px 16px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .btn-ghost {
+    background: var(--card-2); color: var(--text); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px 16px; font: inherit; font-size: 14px; cursor: pointer;
+  }
+  .btn-ghost:hover { border-color: var(--accent); }
+
+  /* Карточки категорий */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 16px; }
+  .card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .dot { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-weight: 700; flex: none; }
+  .card-title { flex: 1; min-width: 0; }
+  .card-title h3 { margin: 0; font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .card-title span { font-size: 13px; color: var(--muted); }
+  .icon-btn {
+    background: none; border: 0; color: var(--muted); padding: 8px; border-radius: 10px;
+    cursor: pointer; display: grid; place-items: center;
+  }
+  .icon-btn:hover { color: var(--danger); background: rgba(240, 138, 138, .1); }
+  .acts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .act {
+    background: var(--card-2); border: 1px solid var(--border); border-radius: 12px;
+    color: var(--text); padding: 10px; text-align: left; cursor: pointer;
+    min-height: 74px; display: flex; flex-direction: column; gap: 4px; font: inherit;
+  }
+  .act:hover { border-color: var(--accent); background: #202a4a; }
+  .act:active { transform: scale(.98); }
+  .act-xp { font-weight: 700; color: var(--accent); font-size: 15px; }
+  .act-text { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+  .busy .act { opacity: .6; pointer-events: none; }
+
+  .empty {
+    grid-column: 1 / -1; text-align: center; padding: 48px 16px;
+    border: 1px dashed var(--border); border-radius: 18px; color: var(--muted);
+  }
+  .empty h3 { color: var(--text); margin: 0 0 6px; }
+  .empty p { margin: 0 0 16px; font-size: 14px; }
+
+  /* Окно добавления категории */
+  dialog {
+    background: var(--card); color: var(--text); border: 1px solid var(--border);
+    border-radius: 20px; padding: 0; width: min(460px, calc(100% - 32px));
+  }
+  dialog::backdrop { background: rgba(5, 8, 18, .7); }
+  dialog form { padding: 22px; }
+  dialog h3 { margin: 0 0 16px; font-size: 18px; }
+  label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+  input {
+    width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+    color: var(--text); padding: 10px 12px; font: inherit; font-size: 14px;
+  }
+  input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+  input::placeholder { color: #5d6785; }
+  .rules-title { margin: 16px 0 8px; font-size: 13px; color: var(--muted); }
+  .rule-row { display: grid; grid-template-columns: 48px 1fr; gap: 10px; align-items: center; margin-bottom: 8px; }
+  .rule-row b { color: var(--accent); }
+  .form-error { color: var(--danger); font-size: 13px; min-height: 18px; margin: 8px 0 4px; }
+  .dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px; }
+
+  /* Уведомления */
+  #toasts {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    width: calc(100% - 32px); display: flex; flex-direction: column; align-items: center;
+    gap: 8px; pointer-events: none; z-index: 100;
+  }
+  .toast {
+    background: #1d2748; border: 1px solid var(--border); padding: 10px 16px;
+    border-radius: 12px; font-size: 14px; max-width: 100%;
+  }
+  .toast.err { border-color: rgba(240, 138, 138, .5); color: var(--danger); background: #2a1c2e; }
+  @keyframes pop { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes fade { to { opacity: 0; } }
+
+  @media (max-width: 520px) {
+    .hero { padding: 16px; gap: 14px; }
+    .level-badge { width: 76px; height: 76px; border-radius: 18px; }
+    .lvl-num { font-size: 28px; }
+    .section { flex-direction: column; align-items: stretch; }
+    .section .btn-primary { width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bar-fill { transition: none; }
+    .toast { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="level-badge">
+      <span class="lvl-label">Уровень</span>
+      <span id="level" class="lvl-num">0</span>
+    </div>
+    <div class="hero-info">
+      <div class="hero-row">
+        <span id="progress-text">&nbsp;</span>
+        <span id="total"></span>
+      </div>
+      <div class="bar"><div id="bar-fill" class="bar-fill"></div></div>
+    </div>
+  </header>
+
+  <div class="section">
+    <h2>Категории</h2>
+    <button class="btn-primary" id="open-form" type="button">+ Добавить категорию</button>
+  </div>
+
+  <main id="grid" class="grid"></main>
+</div>
+
+<dialog id="dialog">
+  <form id="form" autocomplete="off">
+    <h3>Новая категория</h3>
+
+    <label for="f-name">Название</label>
+    <input id="f-name" maxlength="40" placeholder="Например: Рисование" required>
+
+    <div class="rules-title">Что считается за каждую награду</div>
+    <div class="rule-row"><b>+2</b><input id="f-2" maxlength="60" placeholder="Например: сделала набросок" required></div>
+    <div class="rule-row"><b>+5</b><input id="f-5" maxlength="60" placeholder="Например: поработала 30 минут" required></div>
+    <div class="rule-row"><b>+7</b><input id="f-7" maxlength="60" placeholder="Например: закончила иллюстрацию" required></div>
+    <div class="rule-row"><b>+10</b><input id="f-10" maxlength="60" placeholder="Например: завершила арт-проект" required></div>
+
+    <div id="form-error" class="form-error"></div>
+    <div class="dialog-actions">
+      <button type="button" class="btn-ghost" id="cancel">Отмена</button>
+      <button type="submit" class="btn-primary">Добавить</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="toasts"></div>
+
+<script>
+  const XP_VALUES = [2, 5, 7, 10];
+  let categories = {};                                   // {имя: {"2": текст, "5": ..., ...}}
+  let stats = { total_xp: 0, level: 0, categories_xp: {} };
+  let busy = false;
+
+  const $ = (id) => document.getElementById(id);
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  // Цвет значка категории зависит от названия, чтобы у каждой был свой
+  function hue(name) {
+    let h = 0;
+    for (const ch of name) h = (h * 31 + ch.codePointAt(0)) % 360;
+    return h;
+  }
+
+  /* ---------- Запросы к API ---------- */
+
+  // FastAPI возвращает ошибки в двух форматах: detail строкой (наши HTTPException)
+  // или списком объектов (автоматическая валидация Pydantic, код 422)
+  function errorText(data, status) {
+    const d = data && data.detail;
+    if (typeof d === "string") return d;
+    if (Array.isArray(d)) return d.map((e) => e.msg).join("; ");
+    return "Ошибка сервера (" + status + ")";
+  }
+
+  async function api(method, url, body) {
+    let res;
+    try {
+      res = await fetch(url, {
+        method,
+        headers: body ? { "Content-Type": "application/json" } : undefined,
+        body: body ? JSON.stringify(body) : undefined,
+      });
+    } catch (e) {
+      throw new Error("Нет связи с сервером. Он запущен?");
+    }
+    let data = null;
+    try { data = await res.json(); } catch (e) { /* пустой ответ */ }
+    if (!res.ok) throw new Error(errorText(data, res.status));
+    return data;
+  }
+
+  async function refresh() {
+    const [c, s] = await Promise.all([api("GET", "/categories"), api("GET", "/stats")]);
+    categories = c;
+    stats = s;
+    render();
+  }
+
+  /* ---------- Отрисовка ---------- */
+
+  function renderHeader() {
+    const total = stats.total_xp;
+    const level = stats.level;
+    const inLevel = total % 100;
+    $("level").textContent = level;
+    $("total").textContent = "Всего: " + total + " XP";
+    $("progress-text").textContent = "До уровня " + (level + 1) + ": " + inLevel + " / 100 XP";
+    $("bar-fill").style.width = inLevel + "%";
+  }
+
+  const TRASH = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/></svg>';
+
+  function cardHTML(name, rules) {
+    const h = hue(name);
+    const xp = stats.categories_xp[name] || 0;
+    const buttons = XP_VALUES.map((v) => `
+      <button class="act" type="button" data-cat="${esc(name)}" data-xp="${v}">
+        <span class="act-xp">+${v}</span>
+        <span class="act-text">${esc(rules[String(v)] || "")}</span>
+      </button>`).join("");
+    return `
+      <article class="card">
+        <div class="card-head">
+          <div class="dot" style="background:hsla(${h},60%,65%,.16);color:hsl(${h},65%,72%)">${esc(name.trim().charAt(0).toUpperCase())}</div>
+          <div class="card-title">
+            <h3>${esc(name)}</h3>
+            <span>${xp} XP</span>
+          </div>
+          <button class="icon-btn" type="button" data-del="${esc(name)}" title="Удалить категорию" aria-label="Удалить категорию ${esc(name)}">${TRASH}</button>
+        </div>
+        <div class="acts">${buttons}</div>
+      </article>`;
+  }
+
+  function renderGrid() {
+    const names = Object.keys(categories);
+    if (names.length === 0) {
+      $("grid").innerHTML = `
+        <div class="empty">
+          <h3>Пока нет категорий</h3>
+          <p>Добавь первую, чтобы начать копить опыт.</p>
+          <button class="btn-primary" type="button" data-open>+ Добавить категорию</button>
+        </div>`;
+      return;
+    }
+    $("grid").innerHTML = names.map((n) => cardHTML(n, categories[n])).join("");
+  }
+
+  function render() {
+    renderHeader();
+    renderGrid();
+  }
+
+  /* ---------- Уведомления ---------- */
+
+  function toast(text, isError) {
+    const ms = isError ? 4000 : 1800;
+    const el = document.createElement("div");
+    el.className = "toast" + (isError ? " err" : "");
+    el.textContent = text;
+    el.style.animation = "pop .25s ease, fade .3s ease " + ms + "ms forwards";
+    $("toasts").appendChild(el);
+    setTimeout(() => el.remove(), ms + 400);
+  }
+
+  /* ---------- Действия ---------- */
+
+  async function addXp(category, xp) {
+    if (busy) return;
+    busy = true;
+    document.body.classList.add("busy");
+    const levelBefore = stats.level;
+    try {
+      await api("POST", "/xp", { category, xp });
+      await refresh();
+      toast("+" + xp + " XP");
+      if (stats.level > levelBefore) toast("Новый уровень: " + stats.level + "!");
+    } catch (e) {
+      toast(e.message, true);
+      refresh().catch(() => {});   // подтянуть актуальное состояние, если что-то разошлось
+    } finally {
+      busy = false;
+      document.body.classList.remove("busy");
+    }
+  }
+
+  async function deleteCategory(name) {
+    if (!confirm("Удалить категорию «" + name + "»?\nОчки останутся в общем уровне.")) return;
+    try {
+      // имя может содержать пробелы и кириллицу, поэтому кодируем его для URL
+      await api("DELETE", "/categories/" + encodeURIComponent(name));
+      await refresh();
+    } catch (e) {
+      toast(e.message, true);
+      refresh().catch(() => {});
+    }
+  }
+
+  async function createCategory(e) {
+    e.preventDefault();
+    const name = $("f-name").value.trim();
+    const err = $("form-error");
+    err.textContent = "";
+    if (!name) { err.textContent = "Введи название."; return; }
+    if (name.includes("/")) { err.textContent = "В названии нельзя использовать «/»."; return; }
+
+    const rules = {};
+    for (const v of XP_VALUES) rules[String(v)] = $("f-" + v).value.trim();
+
+    try {
+      await api("POST", "/categories", { name, rules });
+      $("dialog").close();
+      $("form").reset();
+      await refresh();
+    } catch (e2) {
+      err.textContent = e2.message;
+    }
+  }
+
+  /* ---------- События ---------- */
+
+  $("grid").addEventListener("click", (e) => {
+    const act = e.target.closest("[data-xp]");
+    if (act) { addXp(act.dataset.cat, Number(act.dataset.xp)); return; }
+    const del = e.target.closest("[data-del]");
+    if (del) { deleteCategory(del.dataset.del); return; }
+    if (e.target.closest("[data-open]")) openForm();
+  });
+
+  function openForm() {
+    $("form-error").textContent = "";
+    $("dialog").showModal();
+    $("f-name").focus();
+  }
+
+  $("open-form").addEventListener("click", openForm);
+  $("cancel").addEventListener("click", () => $("dialog").close());
+  $("form").addEventListener("submit", createCategory);
+
+  refresh().catch((e) => {
+    $("grid").innerHTML = '<div class="empty"><h3>Не удалось загрузить данные</h3><p></p></div>';
+    $("grid").querySelector("p").textContent = e.message;
+  });
+</script>
+</body>
+</html>

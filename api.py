@@ -67,3 +67,6 @@ def get_stats(conn=Depends(get_db)):
         "level": level,
         "categories_xp": categories_xp,
     }
+
+from fastapi.staticfiles import StaticFiles
+app.mount("/", StaticFiles(directory="static", html=True), name="static")

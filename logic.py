@@ -6,7 +6,7 @@ DB_PATH = os.environ.get("DB_PATH", "tracker.db")
 
 
 def get_conn():
-    return sqlite3.connect(DB_PATH)
+    return sqlite3.connect(DB_PATH, check_same_thread=False)
 
 
 def init_db():
